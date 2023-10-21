@@ -57,6 +57,8 @@ class Game:
         text = SMALLFONT.render('Your gamertag is:', True, 'white', None)
         text_rect = text.get_rect(center=(self.width/2, 300))
         self.screen.blit(text, text_rect)
+        pygame.draw.rect(self.screen, 'white',
+                         pygame.Rect(200, 330, 250, 40), 2)
         pygame.display.flip()
         return
 
@@ -120,59 +122,104 @@ class Game:
     # creates player and court selection self.screen
     def startGame(self):
         self.screen.fill('#00BF63')
-        text = FONT.render('What background?', True, 'white', None)
-        text_rect = text.get_rect(center=(self.width/2, 50))
+        text = FONT.render('Select a background', True, 'white', None)
+        text_rect = text.get_rect(center=(self.width/2, 80))
         self.screen.blit(text, text_rect)
-        text = FONT.render('1, 2 or 3', True, 'white', None)
-        text_rect = text.get_rect(center=(self.width/2, 400))
-        self.screen.blit(text, text_rect)
-        img = pygame.image.load('bgs.png')
-        img = pygame.transform.scale(img, (400, 100))
-        self.screen.blit(img, (120, 200))
+
+        xpos = 30
+        ypos = 200
+        for x in range(1, 4):
+            img = pygame.image.load('bg_{}.png'.format(x))
+            img = pygame.transform.scale(img, (225, 225))
+            self.screen.blit(img, (xpos, ypos))
+            xpos += 180
         pygame.display.flip()
 
         # gets users requested background
         bg = None
+        screen_choice = 0
         while bg is None:
             # checks exit has not been pressed
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                # returns to menu if escape has been pressed
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 'escape':
-                        self.showMenu()
-                    elif key in ['1', '2', '3']:
-                        bg = 'bg_'+key+'.png'
+                # chooses the correct screen
+                clicked = event.type == pygame.MOUSEBUTTONDOWN
+                print(clicked)
+                pos = pygame.mouse.get_pos()
+                if pos[1] < 400 and pos[1] > 225 and pos[0] < 205 and pos[0] > 80:
+                    if clicked:
+                        screen_choice = 1
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] < 400 and pos[1] > 225 and pos[0] < 380 and pos[0] > 260:
+                    if clicked:
+                        screen_choice = 2
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] < 400 and pos[1] > 225 and pos[0] < 565 and pos[0] > 440:
+                    if clicked:
+                        screen_choice = 3
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+                if screen_choice != 0:
+                    bg = 'bg_{}.png'.format(screen_choice)
 
         # creates player selection self.screen
         self.screen.fill('#00BF63')
-        text = FONT.render('Which player?', True, 'white', None)
-        text_rect = text.get_rect(center=(self.width/2, 50))
+        text = FONT.render('Select a player', True, 'white', None)
+        text_rect = text.get_rect(center=(self.width/2, 80))
         self.screen.blit(text, text_rect)
-        text = FONT.render('1, 2 or 3', True, 'white', None)
-        text_rect = text.get_rect(center=(self.width/2, 400))
-        self.screen.blit(text, text_rect)
-        img = pygame.image.load('players.png')
-        img = pygame.transform.scale(img, (400, 100))
-        self.screen.blit(img, (120, 200))
+
+        xpos = 30
+        ypos = 250
+        for x in range(1, 5):
+            img = pygame.image.load('player_{}.png'.format(x))
+            self.screen.blit(img, (xpos, ypos))
+            xpos += 150
         pygame.display.flip()
 
         # gets users requested player
+        player_choice = 0
         player = None
         while player is None:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 'escape':
-                        self.showMenu()
-                    elif key in ['1', '2', '3']:
-                        player = 'player_'+key+'.png'
+                # chooses the correct player
+                clicked = event.type == pygame.MOUSEBUTTONDOWN
+                pos = pygame.mouse.get_pos()
+                if pos[1] > 250 and pos[1] < 350 and pos[0] < 130 and pos[0] > 30:
+                    if clicked:
+                        player_choice = 1
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 250 and pos[1] < 350 and pos[0] < 280 and pos[0] > 180:
+                    if clicked:
+                        player_choice = 2
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 250 and pos[1] < 350 and pos[0] < 430 and pos[0] > 330:
+                    if clicked:
+                        player_choice = 3
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 250 and pos[1] < 350 and pos[0] < 580 and pos[0] > 480:
+                    if clicked:
+                        player_choice = 4
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+
+                if player_choice != 0:
+                    player = 'player_{}.png'.format(player_choice)
+
         # returns  the values back to the main progam
         return (bg, player)
 
@@ -234,6 +281,7 @@ class Game:
 
     # start of main game by loading images
     def playGame(self, bg, player):
+        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         bg = pygame.image.load(bg)
         player = pygame.image.load(player)
         comp = pygame.image.load('player_{}.png'.format(random.randint(1, 4)))
@@ -418,17 +466,22 @@ class Game:
         while in_instruction:
             instructions = pygame.image.load('instructions.png')
             self.screen.blit(instructions, (0, 0))
+            # back arrow
+            img = pygame.image.load('back.png')
+            img = pygame.transform.scale(img, (50, 50))
+            self.screen.blit(img, (10, 10))
             pygame.display.flip()
+
             for event in pygame.event.get():
                 # checks if user pressed exit
                 if event.type == pygame.QUIT:
                     # this closes pygame
                     pygame.quit()
                     sys.exit()
-                # checks if escape has been pressed and returns to the menu if so
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 'escape':
+                # checks if mouse  has been pressed and will go to correct screen if so
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] > 10 and pos[0] < 60 and pos[1] < 60 and pos[1] > 10:
                         self.showMenu()
 
     # function to show the leaderboard
@@ -439,6 +492,11 @@ class Game:
             text = FONT.render('Leaderboard', True, 'white', None)
             text_rect = text.get_rect(center=(self.width/2, 50))
             self.screen.blit(text, text_rect)
+
+            # back arrow
+            img = pygame.image.load('back.png')
+            img = pygame.transform.scale(img, (50, 50))
+            self.screen.blit(img, (10, 10))
 
             # gets top 10 names and scores then displays them
             con = sqlite3.connect("scores_database.db")
@@ -465,11 +523,10 @@ class Game:
                     # this closes pygame
                     pygame.quit()
                     sys.exit()
-                # checks if escape has been pressed and returns to the menu if so
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 'escape':
-                        in_board = False
+                # checks if mouse  has been pressed and will go to correct screen if so
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] > 10 and pos[0] < 60 and pos[1] < 60 and pos[1] > 10:
                         self.showMenu()
 
     # function to check how many trophys are earnt
@@ -489,6 +546,10 @@ class Game:
             text_rect = text.get_rect(center=(self.width/2, 50))
             self.screen.blit(text, text_rect)
             # opens database and get score
+            # back arrow
+            img = pygame.image.load('back.png')
+            img = pygame.transform.scale(img, (50, 50))
+            self.screen.blit(img, (10, 10))
             con = sqlite3.connect("scores_database.db")
             cursor = con.cursor()
             score = cursor.execute(
@@ -522,11 +583,10 @@ class Game:
                     in_instruction = False
                     pygame.quit()
                     sys.exit()
-                # checks if a key has been pressed and will go to correct screen if so
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 'escape':
-                        in_instruction = False
+                # checks if mouse  has been pressed and will go to correct screen if so
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] > 10 and pos[0] < 60 and pos[1] < 60 and pos[1] > 10:
                         self.showMenu()
 
     # displays menu screen
@@ -543,32 +603,32 @@ class Game:
                     # this closes pygame
                     pygame.quit()
                     sys.exit()
-                # checks if a key has been pressed and will go to correct self.screen if so
-                elif event.type == pygame.KEYDOWN:
-                    key = pygame.key.name(event.key)
-                    if key == 's':
+
+                clicked = event.type == pygame.MOUSEBUTTONDOWN
+                pos = pygame.mouse.get_pos()
+                if pos[1] > 145 and pos[1] < 225 and pos[0] < 510 and pos[0] > 145:
+                    if clicked:
                         bg_pick, comp_pick = self.startGame()
                         self.playGame(bg_pick, comp_pick)
-                    elif key == 'i':
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 265 and pos[1] < 345 and pos[0] < 510 and pos[0] > 145:
+                    if clicked:
                         self.showInstructions()
-                    elif key == 'l':
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 385 and pos[1] < 465 and pos[0] < 510 and pos[0] > 145:
+                    if clicked:
                         self.showBoard()
-                    elif key == 't':
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                elif pos[1] > 505 and pos[1] < 585 and pos[0] < 510 and pos[0] > 145:
+                    if clicked:
                         self.showTrophies()
-                    elif key == 'escape':
-                        self.showMenu()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    pos = pygame.mouse.get_pos()
-                    if pos[0] > 150 and pos[0] < 450:
-                        if pos[1] > 130 and pos[1] < 210:
-                            bg_pick, comp_pick = self.startGame()
-                            self.playGame(bg_pick, comp_pick)
-                        elif pos[1] > 250 and pos[1] < 330:
-                            self.showInstructions()
-                        elif pos[1] > 370 and pos[1] < 450:
-                            self.showBoard()
-                        elif pos[1] > 490 and pos[1] < 570:
-                            self.showTrophies()
+                    else:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             # update the display to show the changes
             pygame.display.flip()
 
@@ -580,16 +640,3 @@ if __name__ == "__main__":
     GAMERTAG = game.getGamertag()
     # calls show_menu function
     game.showMenu()
-
-
-
-
-
-                # while serving:
-                #     ball.updatePos(False)
-                #     user_player.updatePos()
-                #     comp_player.updatePos(ball.ballRect.centerx,ball.ballRect.centery,ball.v)
-                #     if ball.ballRect.colliderect(comp_player.playerRect) and self.server:
-                #         serving = False
-                #     elif ball.ballRect.colliderect(user_player.playerRect) and not self.server:
-                #         serving = False
