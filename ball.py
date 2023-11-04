@@ -1,34 +1,36 @@
-#Import the nesicary modules
+# import pygame
 import pygame
 
-# class to hold the balls details     
+# class to hold the balls details
+
+
 class Ball:
-    def __init__(self, d, v, img,screen):
+    def __init__(self, d, v, img, screen):
         self.x = 425
         self.y = 505
         self.d = d
         self.v = v
         self.img = img
-        self.ballRect = pygame.Rect(self.x, self.y,self.d,self.d)
+        self.ballRect = pygame.Rect(self.x, self.y, self.d, self.d)
         self.xpos = True
         self.ypos = True
         self.direction = 1
         self.screen = screen
-        self.courttop,self.courtbottom = 75,575
-        self.courtleft, self.courtright = 174,471
+        self.courttop, self.courtbottom = 75, 575
+        self.courtleft, self.courtright = 174, 471
 
-    # displays the object on the self.screen
+    # displays the object on the screen
     def display(self):
-        self.ball = self.screen.blit(self.img,self.ballRect)
-    
+        self.ball = self.screen.blit(self.img, self.ballRect)
+
     # updates the balls cordinates dependent on if it has been hit or not
-    def updatePos(self,hit):
+    def updatePos(self, hit):
         if self.y > 650 or self.y < 0:
             self.y = 300
         elif self.ypos:
             if hit:
-                self.y -= 10 *self.v
-                self.y -= 3 *self.v
+                self.y -= 10 * self.v
+                self.y -= 3 * self.v
                 self.ypos = False
             else:
                 self.y += self.v
@@ -36,11 +38,12 @@ class Ball:
         else:
             if hit:
                 self.y += 10 * self.v
-                self.y += 3 *self.v
+                self.y += 3 * self.v
                 self.ypos = True
             else:
                 self.y -= self.v
                 self.ypos = False
+
         # alters x direction
         if self.direction == 1:
             self.x -= self.v/2
@@ -67,21 +70,29 @@ class Ball:
         elif self.y > self.courtbottom:
             winner = 'computer'
         elif self.y < self.courttop:
-            winner = 'player' 
-        # play sound    
+            winner = 'player'
+
+        # plays sound according to the winner of the point
         if winner == 'computer':
-            loss = pygame.mixer.Sound('loss.mp3')
+            loss = pygame.mixer.Sound('sounds/loss.mp3')
             loss.play()
         elif winner == 'player':
-            win = pygame.mixer.Sound('win.mp3')
+            win = pygame.mixer.Sound('sounds/win.mp3')
             win.play()
         return winner
-    
+
     # method to set x and y
-    def startPos(self,server):
+    def startPos(self, server,side):
         if server:
-            self.x, self.y = 425,505
+            if side:
+                self.x, self.y = 425, 505
+            else:
+                self.x, self.y = 240, 505
+
         else:
-            self.x, self.y = 240,180
+            if side:
+                self.x, self.y = 240, 180
+            else:
+                self.x, self.y = 425, 180
             self.ypos = True
         self.ballRect = pygame.Rect(self.x, self.y, self.d, self.d)
