@@ -1,2 +1,7 @@
 # Tennis game
-Code for A-level computing project
+Single player tennis game
+Features:
+- Player selection
+- Computer oponent
+- Trophies
+- Leaderboard
