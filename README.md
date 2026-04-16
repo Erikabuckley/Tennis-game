@@ -1,10 +1,29 @@
-# Tennis game
-Single player tennis game developed as part of A Level course.
+# 🎾 Tennis Game
 
-This interactive game allows the user to pick a player and play against the computer in a game of tennis.
+A simple 2D tennis game built using Python and the Pygame library.
+Two players control paddles and try to keep the ball in play while scoring points against each other.
 
-Features:
-- Player selection
-- Computer oponent
-- Trophies
-- Leaderboard
+## 📌 Features
+* 🏓 Smooth paddle and ball movement
+* 🧮 Score tracking system
+* 💥 Basic collision physics
+* 🪶 Lightweight and easy to run
+
+## 🚀 How to Run
+
+1. Install Python
+
+Make sure you have Python 3 installed:
+
+```bash
+python --version
+```
+
+2. Install Pygame
+```
+bash pip install pygame
+```
+3. Run the game
+```
+bash python main.py
+```
