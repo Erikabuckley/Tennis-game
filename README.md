@@ -1,7 +1,7 @@
 # 🎾 Tennis Game
 
 A simple 2D tennis game built using Python and the Pygame library.
-Two players control paddles and try to keep the ball in play while scoring points against each other.
+Players try to keep the ball in play while scoring points against opponents.
 
 ## 📌 Features
 * 🏓 Smooth paddle and ball movement
